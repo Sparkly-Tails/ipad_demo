@@ -92,6 +92,14 @@ must produce a newer server render time.
 7. Run `npm run deploy`, install on a development store, and check Auth check
    on the devices your staff use.
 
+## Pinned versions
+
+React Router is pinned at 7.18.2 (exact versions in `package.json`). From 7.18.3
+it validates the full origin of action POST requests, and under `shopify app dev`
+TLS ends at the tunnel, so the app sees plain http and every action POST returns
+400 (remix-run/react-router#15420). Keep the pin until the app adopts
+`allowedActionOrigins`.
+
 ## License
 
 MIT, from Shopify's app template. See `LICENSE.md`.
