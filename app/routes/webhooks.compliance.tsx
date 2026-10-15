@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import type { ActionFunctionArgs } from "react-router";
 import { authenticate } from "../shopify.server";
 import db from "../db.server";
@@ -9,6 +10,10 @@ import db from "../db.server";
 // customer topics only acknowledge. Payloads hold customer emails and phone
 // numbers, so they are never logged.
 export const action = async ({ request }: ActionFunctionArgs) => {
+  // TEMPORARY DEBUG: fingerprints only, no secret or body content is logged.
+  const fingerprint = (value: string) =>
+    `${value.length} chars, sha256 ${createHash("sha256").update(value).digest("hex").slice(0, 8)}`;
+  const debugBody = await request.clone().text();
   let context;
   try {
     context = await authenticate.webhook(request);
@@ -16,7 +21,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     // authenticate.webhook throws a Response (401 for a bad HMAC, 400 for
     // missing headers). Log the status so rejections are visible in Vercel.
     if (error instanceof Response) {
-      console.log(`Compliance webhook rejected with HTTP ${error.status}`);
+      console.log(
+        `Compliance webhook rejected with HTTP ${error.status}; body ${fingerprint(debugBody)}; secret ${fingerprint(process.env.SHOPIFY_API_SECRET ?? "")}`,
+      );
     } else {
       console.log(`Compliance webhook failed before verification: ${String(error)}`);
     }
