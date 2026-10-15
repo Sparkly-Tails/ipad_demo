@@ -24,6 +24,11 @@ updates:
       semver-patch-days: 14
 
     ignore:
+      # This template tracks Shopify's React Router app template. Major version
+      # bumps (eslint, typescript-eslint, prisma, react, vite) are not supported
+      # by it yet and failed CI, so skip them until the template moves.
+      - dependency-name: '*'
+        update-types: ['version-update:semver-major']
       # Hold the react-router family at the version pinned in package.json.
       # react-router 7.18.3 tightened action-origin validation from host-only to
       # full origin (scheme + host + port) in remix-run/react-router#15420. Under

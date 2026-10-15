@@ -7,7 +7,9 @@ embedded = true
 
 [access_scopes]
 # Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
-scopes = "write_products"
+# No Admin API scopes are requested. Add the scopes your app needs here, for
+# example "read_products,write_products", then run `shopify app deploy`.
+scopes = ""
 
 [webhooks]
 api_version = "2026-10"
